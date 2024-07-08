@@ -93,4 +93,7 @@ public class User {
     public void addFavouritPainting(Painting painting) {
         this.favouritePainting.add(painting);
     }
+    public void addRatedPainting(Painting painting){
+        this.ratedPaintings.add(painting);
+    }
 }

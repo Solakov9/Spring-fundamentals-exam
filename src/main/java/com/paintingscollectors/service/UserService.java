@@ -7,7 +7,6 @@ import com.paintingscollectors.model.entity.Painting;
 import com.paintingscollectors.model.entity.User;
 import com.paintingscollectors.repository.PaintingRepository;
 import com.paintingscollectors.repository.UserRepository;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -92,14 +90,15 @@ public class UserService {
         if (paintingOpt.isEmpty()){
             return;
         }
-        List<Long> paintingIds = userOpt.get().getRatedPaintings().stream().map(p -> p.getId()).collect(Collectors.toList());
+        User user = userOpt.get();
+        List<Long> paintingIds = user.getRatedPaintings().stream().map(Painting::getId).toList();
 
         if (paintingIds.contains(paintingId)){
             return;
         }
-        userOpt.get().addFavouritPainting(paintingOpt.get());
+        user.addRatedPainting(paintingOpt.get());
         paintingOpt.get().setVotes(paintingOpt.get().getVotes() + 1);
         paintingRepository.save(paintingOpt.get());
-        userRepository.save(userOpt.get());
+        userRepository.save(user);
     }
 }
