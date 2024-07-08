@@ -49,7 +49,7 @@ public class UserController {
         if (userSession.isLoggedIn()){
             return "redirect:/home";
         }
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()||!isConfirmPasswordSame(data)) {
             redirectAttributes.addFlashAttribute("registerData",data);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.registerData", bindingResult);
             return "redirect:/register";
@@ -60,6 +60,11 @@ public class UserController {
         }
         return "redirect:/login";
     }
+
+    private static boolean isConfirmPasswordSame(UserRegisterDTO data) {
+        return data.getPassword().equals(data.getConfirmPassword());
+    }
+
     @GetMapping("/login")
     public String login(){
         if (userSession.isLoggedIn()){
